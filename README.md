@@ -36,7 +36,7 @@ If you would like to trade with your test account:
 
 ### Accounts
 
-See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/account-ep/) for all available options.
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/account-ep/) for all available options on accounts.
 
 ```ruby
 client.accounts.show
@@ -60,7 +60,57 @@ client.account('account_id').changes.show
 
 ```ruby
 options = { alias: 'Test Account' }
+
 client.account('account_id').configuration(options).update
+```
+
+### Orders
+
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/orders-ep/) for all available options on orders.
+
+```ruby
+client.account('account_id').orders.show
+```
+
+```ruby
+id = client.account('account_id').orders.show['orders'][0]['id']
+
+client.account('account_id').order(id).show
+```
+
+```ruby
+options = {
+  'order' => {
+    'units' => '100',
+    'instrument' => 'EUR_CAD',
+    'timeInForce' => 'FOK',
+    'type' => 'MARKET',
+    'positionFill' => 'DEFAULT'
+  }
+}
+
+client.account('account_id').order(options).create
+```
+
+```ruby
+id = client.account('account_id').orders.show['orders'][0]['id']
+
+options = {
+  'order' => {
+    'timeInForce' => 'GTC',
+    'price' => '1.7000',
+    'type' => 'TAKE_PROFIT',
+    'tradeID' => '1'
+  }
+}
+
+client.account('account_id').order(id, options).update
+```
+
+```ruby
+id = client.account('account_id').orders.show['orders'][0]['id']
+
+client.account('account_id').order(id).cancel
 ```
 
 ## Contributing
