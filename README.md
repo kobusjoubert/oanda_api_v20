@@ -36,6 +36,8 @@ If you would like to trade with your test account:
 
 ### Accounts
 
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/account-ep/) for all available options.
+
 ```ruby
 client.accounts.show
 ```
@@ -46,6 +48,19 @@ client.account('account_id').show
 
 ```ruby
 client.account('account_id').summary.show
+```
+
+```ruby
+client.account('account_id').instruments.show
+```
+
+```ruby
+client.account('account_id').changes.show
+```
+
+```ruby
+options = { alias: 'Test Account' }
+client.account('account_id').configuration(options).update
 ```
 
 ## Contributing
@@ -64,3 +79,4 @@ There are still a lot to be added to this gem:
 - Persistent connections using persistent_httparty.
 - No more than 2 connections per second.
 - Limit to 30 requests per second.
+- ...
