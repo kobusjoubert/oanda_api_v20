@@ -113,6 +113,71 @@ id = client.account('account_id').orders.show['orders'][0]['id']
 client.account('account_id').order(id).cancel
 ```
 
+### Trades
+
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/trades-ep/) for all available options on trades.
+
+```ruby
+options = { 'instrument' => 'USD_CAD' }
+
+client.account('account_id').trades(options).show
+```
+
+```ruby
+client.account('account_id').open_trades.show
+```
+
+```ruby
+id = client.account('account_id').open_trades.show['trades'][0]['id']
+
+client.account('account_id').trade(id).show
+```
+
+```ruby
+id = client.account('account_id').open_trades.show['trades'][0]['id']
+
+options = {
+  'clientExtensions' => {
+    'comment' => 'This is a USD/CAD trade',
+    'tag' => 'trade tag',
+    'id' => 'my_usd_cad_trade'
+  }
+}
+
+client.account('account_id').trade(id, options).update
+```
+
+```ruby
+id = client.account('account_id').open_trades.show['trades'][0]['id']
+
+options = {
+  'takeProfit' => {
+    'timeInForce' => 'GTC',
+    'price' => '0.5'
+  },
+  'stopLoss': {
+    'timeInForce' => 'GTC',
+    'price' => '2.5'
+  }
+}
+
+client.account('account_id').trade(id, options).update
+```
+
+```ruby
+id = client.account('account_id').open_trades.show['trades'][0]['id']
+
+options = { 'units' => '10' }
+
+client.account('account_id').trade(id, options).close
+```
+
+```ruby
+id = client.account('account_id').open_trades.show['trades'][0]['id']
+
+client.account('account_id').trade(id).close
+```
+
 ## Contributing
 
 1. Fork it
