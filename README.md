@@ -178,6 +178,26 @@ id = client.account('account_id').open_trades.show['trades'][0]['id']
 client.account('account_id').trade(id).close
 ```
 
+### Positions
+
+```ruby
+client.account('account_id').positions.show
+```
+
+```ruby
+client.account('account_id').open_positions.show
+```
+
+```ruby
+client.account('account_id').position('EUR_USD').show
+```
+
+```ruby
+options = { 'longUnits' => 'ALL' }
+
+client.account('account_id').position('EUR_CAD', options).close
+```
+
 ## Contributing
 
 1. Fork it
