@@ -236,6 +236,16 @@ options = {
 client.account('account_id').transactions_since_id(options).show
 ```
 
+### Pricing
+
+```ruby
+options = {
+  'instruments' => 'EUR_USD,USD_CAD'
+}
+
+client.account('account_id').pricing(options).show
+```
+
 ## Contributing
 
 1. Fork it
