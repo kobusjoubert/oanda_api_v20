@@ -59,7 +59,7 @@ client.account('account_id').changes.show
 ```
 
 ```ruby
-options = { alias: 'Test Account' }
+options = { alias: 'My New Account #2' }
 
 client.account('account_id').configuration(options).update
 ```
