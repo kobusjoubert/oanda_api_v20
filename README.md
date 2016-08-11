@@ -198,6 +198,44 @@ options = { 'longUnits' => 'ALL' }
 client.account('account_id').position('EUR_CAD', options).close
 ```
 
+### Transactions
+
+```ruby
+client.account('account_id').transactions.show
+```
+
+```ruby
+options = {
+  'from' => '2016-08-01T02:00:00Z',
+  'to' => '2016-08-15T02:00:00Z'
+}
+
+client.account('account_id').transactions(options).show
+```
+
+```ruby
+id = 6410
+
+client.account('account_id').transaction(id).show
+```
+
+```ruby
+options = {
+  'from' => '6409',
+  'to' => '6412'
+}
+
+client.account('account_id').transactions_id_range(options).show
+```
+
+```ruby
+options = {
+  'id' => '6411'
+}
+
+client.account('account_id').transactions_since_id(options).show
+```
+
 ## Contributing
 
 1. Fork it
