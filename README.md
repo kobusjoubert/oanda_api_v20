@@ -155,7 +155,7 @@ options = {
     'timeInForce' => 'GTC',
     'price' => '0.5'
   },
-  'stopLoss': {
+  'stopLoss' => {
     'timeInForce' => 'GTC',
     'price' => '2.5'
   }
