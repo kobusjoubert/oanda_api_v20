@@ -180,6 +180,8 @@ client.account('account_id').trade(id).close
 
 ### Positions
 
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/positions-ep/) for all available options on positions.
+
 ```ruby
 client.account('account_id').positions.show
 ```
@@ -199,6 +201,8 @@ client.account('account_id').position('EUR_CAD', options).close
 ```
 
 ### Transactions
+
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/transactions-ep/) for all available options on transactions.
 
 ```ruby
 client.account('account_id').transactions.show
@@ -237,6 +241,8 @@ client.account('account_id').transactions_since_id(options).show
 ```
 
 ### Pricing
+
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/pricing-ep/) for all available options on pricing.
 
 ```ruby
 options = {
