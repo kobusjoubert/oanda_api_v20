@@ -21,6 +21,18 @@ module OandaApiV20
       @headers['Authorization']            = "Bearer #{access_token}"
       @headers['X-Accept-Datetime-Format'] = 'RFC3339'
       @headers['Content-Type']             = 'application/json'
+
+      @debug = options[:debug] || false
+
+      persistent_connection_adapter_options = {
+        name:         'oanda_api_v20',
+        keep_alive:   30,
+        idle_timeout: 10,
+        warn_timeout: 2,
+        pool_size:    2
+      }
+      persistent_connection_adapter_options.merge!(logger: RubyVM::Logger.new(STDOUT)) if @debug
+      Client.persistent_connection_adapter(persistent_connection_adapter_options)
     end
 
     def method_missing(name, *args, &block)
