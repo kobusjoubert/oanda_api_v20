@@ -1,11 +1,12 @@
 $LOAD_PATH.push File.expand_path('../lib', __FILE__)
 
 require 'oanda_api_v20/version'
+require 'time'
 
 Gem::Specification.new do |s|
   s.name        = 'oanda_api_v20'
   s.version     = OandaApiV20::VERSION
-  s.date        = '2016-06-16'
+  s.date        = Date.today.to_s
   s.summary     = %q{Ruby Oanda REST API V20}
   s.description = %q{Ruby client that supports the Oanda REST API V20 methods.}
   s.authors     = ['Kobus Joubert']
