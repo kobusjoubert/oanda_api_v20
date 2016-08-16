@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.4
+#### 2016-08-16
+* Limit Oanda API requests to 30 per second.
+
 ## 0.0.3
 #### 2016-08-14
 * Persistent HTTP connections using the persistent_httparty Gem.

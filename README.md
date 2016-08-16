@@ -265,7 +265,4 @@ client.account('account_id').pricing(options).show
 There are still a lot to be added to this gem:
 
 - Unit tests using RSpec.
-- Persistent connections using persistent_httparty.
-- No more than 2 connections per second.
-- Limit to 30 requests per second.
 - ...
