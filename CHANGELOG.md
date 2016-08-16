@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.5
+#### 2016-08-16
+* Added the Gemfile to allow the 'bundle install' command to work.
+
 ## 0.0.4
 #### 2016-08-16
 * Limit Oanda API requests to 30 per second.
