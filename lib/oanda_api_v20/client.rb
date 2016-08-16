@@ -2,6 +2,8 @@ module OandaApiV20
   class Client
     include HTTParty
 
+    MAX_REQUESTS_PER_SECOND_ALLOWED = 30
+
     BASE_URI = {
       live:     'https://api-fxtrade.oanda.com/v3',
       practice: 'https://api-fxpractice.oanda.com/v3'
@@ -15,14 +17,14 @@ module OandaApiV20
         self.send("#{key}=", value) if self.respond_to?("#{key}=")
       end
 
+      @debug = options[:debug] || false
+      @last_api_request_at = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
       @base_uri = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
 
       @headers = {}
       @headers['Authorization']            = "Bearer #{access_token}"
       @headers['X-Accept-Datetime-Format'] = 'RFC3339'
       @headers['Content-Type']             = 'application/json'
-
-      @debug = options[:debug] || false
 
       persistent_connection_adapter_options = {
         name:         'oanda_api_v20',
@@ -42,6 +44,8 @@ module OandaApiV20
         api = Api.new(api_attributes)
 
         if api.respond_to?(last_action)
+          set_last_api_request_at
+          govern_api_request_rate
           response = last_arguments.nil? || last_arguments.empty? ? api.send(last_action, &block) : api.send(last_action, *last_arguments, &block)
           api_result = JSON.parse(response.body)
           set_last_transaction_id(api_result)
@@ -57,10 +61,20 @@ module OandaApiV20
 
     private
 
-    attr_accessor :http_verb, :account_id, :last_transaction_id, :last_action, :last_arguments
+    attr_accessor :http_verb, :account_id, :last_transaction_id, :last_action, :last_arguments, :last_api_request_at
 
     def api_methods
       Accounts.instance_methods + Orders.instance_methods + Trades.instance_methods + Positions.instance_methods + Transactions.instance_methods + Pricing.instance_methods
+    end
+
+    def govern_api_request_rate
+      return unless last_api_request_at[0]
+      halt = 60 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
+      sleep halt if halt > 0
+    end
+
+    def set_last_api_request_at
+      last_api_request_at.push(Time.now.utc).shift
     end
 
     def set_last_action_and_arguments(action, args)
