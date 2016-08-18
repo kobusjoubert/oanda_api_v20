@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.0.6
+#### 2016-08-18
+* HTTP exception handling added.
+
 ## 0.0.5
 #### 2016-08-16
 * Added the Gemfile to allow the 'bundle install' command to work.
