@@ -252,6 +252,10 @@ options = {
 client.account('account_id').pricing(options).show
 ```
 
+## Exceptions
+
+A `OandaApiV20::RequestError` will be raised when a request to the Oanda API failed for any reason.
+
 ## Contributing
 
 1. Fork it

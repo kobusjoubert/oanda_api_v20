@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'httparty',            '~> 0.13'
   s.add_dependency 'persistent_httparty', '~> 0.1'
+  s.add_dependency 'http-exceptions',     '~> 0.1'
 
   s.files         = `git ls-files`.split("\n")
   s.require_paths = ['lib']

@@ -1,7 +1,9 @@
 require 'httparty'
 require 'persistent_httparty'
+require 'http/exceptions'
 
 require 'oanda_api_v20/version'
+require 'oanda_api_v20/exceptions'
 require 'oanda_api_v20/accounts'
 require 'oanda_api_v20/orders'
 require 'oanda_api_v20/trades'

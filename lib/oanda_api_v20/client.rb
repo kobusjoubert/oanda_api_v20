@@ -46,7 +46,15 @@ module OandaApiV20
         if api.respond_to?(last_action)
           set_last_api_request_at
           govern_api_request_rate
-          response = last_arguments.nil? || last_arguments.empty? ? api.send(last_action, &block) : api.send(last_action, *last_arguments, &block)
+
+          begin
+            response = Http::Exceptions.wrap_exception do
+              last_arguments.nil? || last_arguments.empty? ? api.send(last_action, &block) : api.send(last_action, *last_arguments, &block)
+            end
+          rescue Http::Exceptions::HttpException => e
+            raise OandaApiV20::RequestError, e.message
+          end
+
           api_result = JSON.parse(response.body)
           set_last_transaction_id(api_result)
         end
