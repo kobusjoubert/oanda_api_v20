@@ -20,6 +20,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'persistent_httparty', '~> 0.1'
   s.add_dependency 'http-exceptions',     '~> 0.1'
 
+  s.add_development_dependency 'rspec',   '~> 3.4'
+  s.add_development_dependency 'webmock', '~> 2.1'
+  s.add_development_dependency 'timecop', '~> 0.8'
+
   s.files         = `git ls-files`.split("\n")
+  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 end

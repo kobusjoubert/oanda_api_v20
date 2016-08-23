@@ -44,19 +44,22 @@ module OandaApiV20
         api = Api.new(api_attributes)
 
         if api.respond_to?(last_action)
+          api_result = {}
           set_last_api_request_at
           govern_api_request_rate
 
           begin
-            response = Http::Exceptions.wrap_exception do
+            response = Http::Exceptions.wrap_and_check do
               last_arguments.nil? || last_arguments.empty? ? api.send(last_action, &block) : api.send(last_action, *last_arguments, &block)
             end
           rescue Http::Exceptions::HttpException => e
             raise OandaApiV20::RequestError, e.message
           end
 
-          api_result = JSON.parse(response.body)
-          set_last_transaction_id(api_result)
+          if response.body && !response.body.empty?
+            api_result.merge!(JSON.parse(response.body))
+            set_last_transaction_id(api_result['lastTransactionID']) if api_result['lastTransactionID']
+          end
         end
 
         api_result
@@ -64,6 +67,8 @@ module OandaApiV20
         set_last_action_and_arguments(name, args)
         set_account_id(args.first) if name == :account
         self
+      else
+        super
       end
     end
 
@@ -77,7 +82,7 @@ module OandaApiV20
 
     def govern_api_request_rate
       return unless last_api_request_at[0]
-      halt = 60 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
+      halt = 1 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
       sleep halt if halt > 0
     end
 
@@ -102,8 +107,8 @@ module OandaApiV20
       self.account_id = id
     end
 
-    def set_last_transaction_id(api_result)
-      self.last_transaction_id = api_result['lastTransactionID'] if api_result['lastTransactionID']
+    def set_last_transaction_id(id)
+      self.last_transaction_id = id
     end
 
     def set_http_verb(action, last_action)
