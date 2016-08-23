@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.0.0
+#### 2016-08-23
+* Added the RSpec Gem for writing unit tests.
+* Added the WebMock Gem to stub HTTP requests to Oanda API when writing unit tests.
+* Raises a NoMethodError exception when the method does not exist. Previously nil was returned.
+* Raises an OandaApiV20::RequestError exception when the status code is not 2xx.
+* Fixed an issue where the requests to Oanda API was limited to 30 requests per minute instead of 30 requests per second. Whoops!
+* Fixed a bug where the response body would sometimes be nil and cause the client to crash.
+
 ## 0.0.6
 #### 2016-08-18
 * HTTP exception handling added.
