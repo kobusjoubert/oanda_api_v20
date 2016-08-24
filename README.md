@@ -1,6 +1,7 @@
 # OandaApiV20
 
 [![Gem Version](https://badge.fury.io/rb/oanda_api_v20.svg)](https://rubygems.org/gems/oanda_api_v20)
+[![Build Status](https://travis-ci.org/kobusjoubert/oanda_api_v20.svg?branch=master)](https://travis-ci.org/kobusjoubert/oanda_api_v20)
 
 Ruby client that supports the Oanda REST API V20 methods.
 
