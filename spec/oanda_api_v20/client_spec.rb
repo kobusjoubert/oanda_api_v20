@@ -7,24 +7,29 @@ describe OandaApiV20::Client do
       expect(c.access_token).to eq('my_access_token')
     end
 
-    it 'sets the base URI to practice when the practice option was supplied and set to true' do
+    it 'sets the base_uri to practice when the practice option was supplied and set to true' do
       c = OandaApiV20::Client.new(practice: true)
       expect(c.base_uri).to eq('https://api-fxpractice.oanda.com/v3')
     end
 
-    it 'sets the base URI to live when the practice option was supplied and set to false' do
+    it 'sets the base_uri to live when the practice option was supplied and set to false' do
       c = OandaApiV20::Client.new(practice: false)
       expect(c.base_uri).to eq('https://api-fxtrade.oanda.com/v3')
     end
 
-    it 'sets the base URI to live when the practice option was not supplied' do
+    it 'sets the base_uri to live when the practice option was not supplied' do
       c = OandaApiV20::Client.new
       expect(c.base_uri).to eq('https://api-fxtrade.oanda.com/v3')
+    end
+
+    it 'set the headers attribute to a hash' do
+      c = OandaApiV20::Client.new
+      expect(c.send(:headers)).to be_an_instance_of(Hash)
     end
   end
 
   describe '#method_missing' do
-    let(:c) { OandaApiV20::Client.new(access_token: 'my_access_token') }
+    let!(:c) { OandaApiV20::Client.new(access_token: 'my_access_token') }
 
     context 'when an OandaApiV20::Api method has been called' do
       it 'saves the method called' do
@@ -51,6 +56,7 @@ describe OandaApiV20::Client do
     context 'when an action method has been called' do
       let(:response_account)  { '{"account":{"id":"100-100-100","NAV":"100000.0000","balance":"100000.0000","lastTransactionID":"99","orders":[],"positions":[],"trades":[],"pendingOrderCount":0},"lastTransactionID":"99"}' }
       let!(:request_account)  { stub_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100').to_return(status: 200, body: response_account, headers: {}) }
+
       let(:response_accounts) { '{"accounts":[{"id":"100-100-100","tags":[]}]}' }
       let!(:request_accounts) { stub_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts').to_return(status: 200, body: response_accounts, headers: {}) }
 
@@ -58,37 +64,70 @@ describe OandaApiV20::Client do
         allow(c).to receive(:sleep)
       end
 
-      it 'sets the equivalent HTTP verb' do
-        c.accounts.show
-        expect(c.send(:http_verb)).to eq(:get)
+      describe 'network' do
+        it 'makes a request to Oanda API' do
+          c.accounts.show
+          expect(request_accounts).to have_been_requested
+          expect(request_accounts).to have_been_requested.at_most_once
+        end
+
+        it 'returns the response from Oanda API' do
+          expect(c.accounts.show).to eq(JSON.parse(response_accounts))
+          expect(c.account('100-100-100').show).to eq(JSON.parse(response_account))
+        end
       end
 
-      it 'makes a request to Oanda API' do
-        c.accounts.show
-        expect(request_accounts).to have_been_requested
-        expect(request_accounts).to have_been_requested.at_most_once
+      describe 'attributes' do
+        it 'sets the equivalent HTTP verb' do
+          c.accounts.show
+          expect(c.send(:http_verb)).to eq(:get)
+        end
+
+        it 'sets the current account ID' do
+          c.account('100-100-100').show
+          expect(c.send(:account_id)).to eq('100-100-100')
+        end
+
+        it 'sets the last transaction ID when returned' do
+          c.account('100-100-100').show
+          expect(c.send(:last_transaction_id)).to eq('99')
+        end
+
+        it 'sets the last request made at time' do
+          expect(c.send(:last_api_request_at).last).to be_nil
+          c.accounts.show
+          expect(c.send(:last_api_request_at).last).to_not be_nil
+          expect(Time.parse(c.send(:last_api_request_at).last.to_s)).to be_an_instance_of(Time)
+        end
       end
 
-      it 'returns the response from Oanda API' do
-        expect(c.accounts.show).to eq(JSON.parse(response_accounts))
-        expect(c.account('100-100-100').show).to eq(JSON.parse(response_account))
+      describe 'headers' do
+        it 'sets authentication header' do
+          c.accounts.show
+          expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts').with(headers: { 'Authorization' => 'Bearer my_access_token' })).to have_been_made.once
+        end
+
+        it 'sets content type header to json' do
+          c.accounts.show
+          expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts').with(headers: { 'Content-Type' => 'application/json' })).to have_been_made.once
+        end
+
+        it 'sets date time format header to RFC3339' do
+          c.accounts.show
+          expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts').with(headers: { 'X-Accept-Datetime-Format' => 'RFC3339' })).to have_been_made.once
+        end
+
+        it 'sets persisten connection header' do
+          c.accounts.show
+          expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts').with(headers: { 'Connection' => 'keep-alive' })).to have_been_made.once
+        end
       end
 
-      it 'sets the last transaction ID when returned' do
-        c.account('100-100-100').show
-        expect(c.send(:last_transaction_id)).to eq('99')
-      end
-
-      it 'sets the last request made at time' do
-        expect(c.send(:last_api_request_at).last).to be_nil
-        c.accounts.show
-        expect(c.send(:last_api_request_at).last).to_not be_nil
-        expect(Time.parse(c.send(:last_api_request_at).last.to_s)).to be_an_instance_of(Time)
-      end
-
-      it 'raises an OandaApiV20::RequestError exception when receiving anything other than a 2xx response from Oanda API' do
-        stub_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-109').to_return(status: 401, body: '', headers: {})
-        expect{ c.account('100-100-109').show }.to raise_error(OandaApiV20::RequestError)
+      describe 'exceptions' do
+        it 'raises an OandaApiV20::RequestError exception when receiving anything other than a 2xx response from Oanda API' do
+          stub_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-109').to_return(status: 401, body: '', headers: {})
+          expect{ c.account('100-100-109').show }.to raise_error(OandaApiV20::RequestError)
+        end
       end
 
       describe 'governing request rate' do

@@ -2,6 +2,7 @@
 module OandaApiV20
   module Positions
     # GET /v3/accounts/:account_id/positions/:instrument
+    # PUT /v3/accounts/:account_id/positions/:instrument/close
     def position(*args)
       instrument = args.shift
       options = args.shift unless args.nil? || args.empty?

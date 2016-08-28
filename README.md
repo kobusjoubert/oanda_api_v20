@@ -111,6 +111,18 @@ client.account('account_id').order(id, options).update
 ```ruby
 id = client.account('account_id').orders.show['orders'][0]['id']
 
+options = {
+  'clientExtensions' => {
+    'comment' => 'New comment for my limit order'
+  }
+}
+
+client.account('account_id').order(id, options).update
+```
+
+```ruby
+id = client.account('account_id').orders.show['orders'][0]['id']
+
 client.account('account_id').order(id).cancel
 ```
 
@@ -138,10 +150,13 @@ client.account('account_id').trade(id).show
 id = client.account('account_id').open_trades.show['trades'][0]['id']
 
 options = {
-  'clientExtensions' => {
-    'comment' => 'This is a USD/CAD trade',
-    'tag' => 'trade tag',
-    'id' => 'my_usd_cad_trade'
+  'takeProfit' => {
+    'timeInForce' => 'GTC',
+    'price' => '0.5'
+  },
+  'stopLoss' => {
+    'timeInForce' => 'GTC',
+    'price' => '2.5'
   }
 }
 
@@ -152,13 +167,10 @@ client.account('account_id').trade(id, options).update
 id = client.account('account_id').open_trades.show['trades'][0]['id']
 
 options = {
-  'takeProfit' => {
-    'timeInForce' => 'GTC',
-    'price' => '0.5'
-  },
-  'stopLoss' => {
-    'timeInForce' => 'GTC',
-    'price' => '2.5'
+  'clientExtensions' => {
+    'comment' => 'This is a USD/CAD trade',
+    'tag' => 'trade tag',
+    'id' => 'my_usd_cad_trade'
   }
 }
 
@@ -264,10 +276,3 @@ A `OandaApiV20::RequestError` will be raised when a request to the Oanda API fai
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-## TODO
-
-There are still a lot to be added to this gem:
-
-- Unit tests using RSpec.
-- ...
