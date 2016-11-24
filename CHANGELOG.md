@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.1.0
+#### 2016-10-24
+* Added an optional field to the account instruments method to query only a list of instruments instead of returning all instruments.
+
 ## 1.0.0
 #### 2016-08-23
 * Added the RSpec Gem for writing unit tests.
