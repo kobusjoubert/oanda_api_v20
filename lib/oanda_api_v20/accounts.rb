@@ -17,8 +17,10 @@ module OandaApiV20
     end
 
     # GET /v3/accounts/:account_id/instruments
-    def instruments
-      Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/instruments", headers: headers)
+    def instruments(instruments = nil)
+      arguments = { headers: headers }
+      arguments.merge!(query: { instruments: instruments }) if instruments
+      Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/instruments", arguments)
     end
 
     # GET /v3/accounts/:account_id/changes

@@ -56,6 +56,10 @@ client.account('account_id').instruments.show
 ```
 
 ```ruby
+client.account('account_id').instruments('EUR_USD,EUR_CAD').show
+```
+
+```ruby
 client.account('account_id').changes.show
 ```
 

@@ -79,6 +79,12 @@ describe OandaApiV20::Api do
         expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/instruments')).to have_been_made.once
       end
 
+      it 'retrieving an instrument' do
+        api.instruments('EUR_USD')
+        options = { 'instruments' => 'EUR_USD' }
+        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/instruments').with(query: options)).to have_been_made.once
+      end
+
       it 'retrieving all changes' do
         api.last_transaction_id = '1'
         api.changes
