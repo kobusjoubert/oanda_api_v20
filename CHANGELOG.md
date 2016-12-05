@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.2.0
+#### 2016-12-03
+* Added the instruments method to retrieve candlestick data.
+
 ## 1.1.0
 #### 2016-10-24
 * Added an optional field to the account instruments method to query only a list of instruments instead of returning all instruments.
