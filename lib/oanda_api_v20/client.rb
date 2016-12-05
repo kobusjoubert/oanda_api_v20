@@ -66,6 +66,7 @@ module OandaApiV20
       when *api_methods
         set_last_action_and_arguments(name, args)
         set_account_id(args.first) if name == :account
+        set_instrument(args.first) if name == :instrument
         self
       else
         super
@@ -74,10 +75,10 @@ module OandaApiV20
 
     private
 
-    attr_accessor :http_verb, :account_id, :last_transaction_id, :last_action, :last_arguments, :last_api_request_at
+    attr_accessor :http_verb, :account_id, :instrument, :last_transaction_id, :last_action, :last_arguments, :last_api_request_at
 
     def api_methods
-      Accounts.instance_methods + Orders.instance_methods + Trades.instance_methods + Positions.instance_methods + Transactions.instance_methods + Pricing.instance_methods
+      Accounts.instance_methods + Instruments.instance_methods + Orders.instance_methods + Trades.instance_methods + Positions.instance_methods + Transactions.instance_methods + Pricing.instance_methods
     end
 
     def govern_api_request_rate
@@ -107,6 +108,10 @@ module OandaApiV20
       self.account_id = id
     end
 
+    def set_instrument(instrument)
+      self.instrument = instrument
+    end
+
     def set_last_transaction_id(id)
       self.last_transaction_id = id
     end
@@ -130,6 +135,7 @@ module OandaApiV20
         base_uri: base_uri,
         headers: headers,
         account_id: account_id,
+        instrument: instrument,
         last_transaction_id: last_transaction_id
       }
     end

@@ -99,6 +99,16 @@ describe OandaApiV20::Api do
       end
     end
 
+    context 'instruments for' do
+      let!(:api) { OandaApiV20::Api.new(base_uri: 'https://api-fxtrade.oanda.com/v3', account_id: '100-100-100', instrument: 'EUR_USD', headers: {}) }
+
+      it 'retrieving candlestick data' do
+        options = { 'count' => '10' }
+        api.candles(options)
+        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/instruments/EUR_USD/candles').with(query: options)).to have_been_made.once
+      end
+    end
+
     context 'orders for' do
       it 'retrieving an order' do
         api.order('1')

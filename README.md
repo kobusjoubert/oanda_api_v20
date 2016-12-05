@@ -69,6 +69,16 @@ options = { alias: 'My New Account #2' }
 client.account('account_id').configuration(options).update
 ```
 
+### Instruments
+
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/instrument-ep/) for all available options on instruments.
+
+```ruby
+options = { count: 10 }
+
+client.instrument('EUR_USD').candles(options).show
+```
+
 ### Orders
 
 See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/orders-ep/) for all available options on orders.
