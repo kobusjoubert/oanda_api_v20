@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.3.0
+#### 2017-03-16
+* Updated the account method to allow query options to be passed along.
+
 ## 1.2.0
 #### 2016-12-03
 * Added the instruments method to retrieve candlestick data.
