@@ -64,6 +64,12 @@ client.account('account_id').changes.show
 ```
 
 ```ruby
+options = { 'sinceTransactionID' => '6358' }
+
+client.account('account_id').changes.show
+```
+
+```ruby
 options = { alias: 'My New Account #2' }
 
 client.account('account_id').configuration(options).update

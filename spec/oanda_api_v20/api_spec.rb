@@ -91,6 +91,14 @@ describe OandaApiV20::Api do
         expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: { 'sinceTransactionID' => '1' })).to have_been_made.once
       end
 
+      it 'retrieving all changes since a transaction id' do
+        options = {
+          'sinceTransactionID' => '1'
+        }
+        api.changes(options)
+        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: options)).to have_been_made.once
+      end
+
       it 'updating a configuration' do
         api.http_verb = :patch
         options = { 'alias' => 'Timmy!' }
