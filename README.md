@@ -81,7 +81,7 @@ client.instrument('EUR_USD').candles(options).show
 
 ### Orders
 
-See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/orders-ep/) for all available options on orders.
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/order-ep/) for all available options on orders.
 
 ```ruby
 client.account('account_id').orders.show
@@ -142,7 +142,7 @@ client.account('account_id').order(id).cancel
 
 ### Trades
 
-See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/trades-ep/) for all available options on trades.
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/trade-ep/) for all available options on trades.
 
 ```ruby
 options = { 'instrument' => 'USD_CAD' }
@@ -207,7 +207,7 @@ client.account('account_id').trade(id).close
 
 ### Positions
 
-See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/positions-ep/) for all available options on positions.
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/position-ep/) for all available options on positions.
 
 ```ruby
 client.account('account_id').positions.show
@@ -229,7 +229,7 @@ client.account('account_id').position('EUR_CAD', options).close
 
 ### Transactions
 
-See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/transactions-ep/) for all available options on transactions.
+See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/transaction-ep/) for all available options on transactions.
 
 ```ruby
 client.account('account_id').transactions.show
