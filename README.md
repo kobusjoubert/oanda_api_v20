@@ -289,6 +289,14 @@ client.account('account_id').pricing(options).show
 
 A `OandaApiV20::RequestError` will be raised when a request to the Oanda API failed for any reason.
 
+## Proxy
+
+If you need your requests to go through a proxy, set the `OANDA_API_V20_PROXY_URL` environment variable.
+
+```ruby
+  OANDA_API_V20_PROXY_URL=https://user:pass@proxy.com:80
+```
+
 ## Contributing
 
 1. Fork it
