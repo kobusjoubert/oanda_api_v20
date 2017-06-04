@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.4.0
+#### 2017-06-04
+* Ability for API requests to go through a proxy.
+
 ## 1.3.0
 #### 2017-03-16
 * Updated the account method to allow query options to be passed along.
