@@ -33,6 +33,10 @@ If you would like to trade with your test account:
 
     client = OandaApiV20.new(access_token: 'my_access_token', practice: true)
 
+If you need your requests to go through a proxy:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', proxy_url: 'https://user:pass@proxy.com:80')
+
 ## Examples
 
 ### Accounts
@@ -288,14 +292,6 @@ client.account('account_id').pricing(options).show
 ## Exceptions
 
 A `OandaApiV20::RequestError` will be raised when a request to the Oanda API failed for any reason.
-
-## Proxy
-
-If you need your requests to go through a proxy, set the `OANDA_API_V20_PROXY_URL` environment variable.
-
-```
-OANDA_API_V20_PROXY_URL=https://user:pass@proxy.com:80
-```
 
 ## Contributing
 
