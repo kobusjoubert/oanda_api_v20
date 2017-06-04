@@ -33,6 +33,10 @@ If you would like to trade with your test account:
 
     client = OandaApiV20.new(access_token: 'my_access_token', practice: true)
 
+If you need your requests to go through a proxy:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', proxy_url: 'https://user:pass@proxy.com:80')
+
 ## Examples
 
 ### Accounts

@@ -9,7 +9,7 @@ module OandaApiV20
       practice: 'https://api-fxpractice.oanda.com/v3'
     }
 
-    attr_accessor :access_token
+    attr_accessor :access_token, :proxy_url
     attr_reader   :base_uri, :headers
 
     def initialize(options = {})
@@ -25,6 +25,10 @@ module OandaApiV20
       @headers['Authorization']            = "Bearer #{access_token}"
       @headers['X-Accept-Datetime-Format'] = 'RFC3339'
       @headers['Content-Type']             = 'application/json'
+
+      if proxy_url && uri = URI(proxy_url)
+        Client.http_proxy(uri.hostname, uri.port, uri.user, uri.password)
+      end
 
       persistent_connection_adapter_options = {
         name:         'oanda_api_v20',

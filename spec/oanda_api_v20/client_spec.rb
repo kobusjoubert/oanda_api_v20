@@ -7,6 +7,11 @@ describe OandaApiV20::Client do
       expect(c.access_token).to eq('my_access_token')
     end
 
+    it 'sets the proxy_url attribute when supplied' do
+      c = OandaApiV20::Client.new(proxy_url: 'https://user:pass@proxy.com:80')
+      expect(c.proxy_url).to eq('https://user:pass@proxy.com:80')
+    end
+
     it 'sets the base_uri to practice when the practice option was supplied and set to true' do
       c = OandaApiV20::Client.new(practice: true)
       expect(c.base_uri).to eq('https://api-fxpractice.oanda.com/v3')
