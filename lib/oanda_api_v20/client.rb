@@ -2,6 +2,10 @@ module OandaApiV20
   class Client
     include HTTParty
 
+    if ENV['OANDA_API_V20_PROXY_URL'] && uri = URI(ENV['OANDA_API_V20_PROXY_URL'])
+      http_proxy uri.hostname, uri.port, uri.user, uri.password
+    end
+
     MAX_REQUESTS_PER_SECOND_ALLOWED = 30
 
     BASE_URI = {
