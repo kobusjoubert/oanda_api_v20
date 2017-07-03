@@ -70,7 +70,7 @@ client.account('account_id').changes.show
 ```ruby
 options = { 'sinceTransactionID' => '6358' }
 
-client.account('account_id').changes.show
+client.account('account_id').changes(options).show
 ```
 
 ```ruby
