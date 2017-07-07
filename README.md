@@ -98,6 +98,12 @@ client.account('account_id').orders.show
 ```
 
 ```ruby
+options = { 'instrument' => 'USD_CAD' }
+
+client.account('account_id').orders(options).show
+```
+
+```ruby
 id = client.account('account_id').orders.show['orders'][0]['id']
 
 client.account('account_id').order(id).show
