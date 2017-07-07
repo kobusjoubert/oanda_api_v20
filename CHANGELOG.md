@@ -1,5 +1,9 @@
 # Change Log
 
+## 1.5.0
+#### 2017-07-07
+* Updated the orders method to allow query options to be passed along.
+
 ## 1.4.0
 #### 2017-06-04
 * Ability for API requests to go through a proxy.
