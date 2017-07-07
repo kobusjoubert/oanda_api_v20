@@ -174,6 +174,12 @@ describe OandaApiV20::Api do
         expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/orders')).to have_been_made.once
       end
 
+      it 'retrieving all orders' do
+        options = { 'instrument' => 'USD_CAD' }
+        api.orders(options)
+        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/orders').with(query: options)).to have_been_made.once
+      end
+
       it 'retrieving all pending orders' do
         api.pending_orders
         expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/pendingOrders')).to have_been_made.once

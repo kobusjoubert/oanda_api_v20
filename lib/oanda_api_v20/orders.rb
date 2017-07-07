@@ -18,8 +18,8 @@ module OandaApiV20
     end
 
     # GET /v3/accounts/:account_id/orders
-    def orders
-      Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/orders", headers: headers)
+    def orders(options = {})
+      Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/orders", headers: headers, query: options)
     end
 
     # GET /v3/accounts/:account_id/pendingOrders
