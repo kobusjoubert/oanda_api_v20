@@ -104,6 +104,10 @@ client.account('account_id').orders(options).show
 ```
 
 ```ruby
+client.account('account_id').pending_orders.show
+```
+
+```ruby
 id = client.account('account_id').orders.show['orders'][0]['id']
 
 client.account('account_id').order(id).show
