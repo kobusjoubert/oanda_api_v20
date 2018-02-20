@@ -93,11 +93,6 @@ describe OandaApiV20::Client do
           expect(c.send(:account_id)).to eq('100-100-100')
         end
 
-        it 'sets the last transaction ID when returned' do
-          c.account('100-100-100').show
-          expect(c.send(:last_transaction_id)).to eq('99')
-        end
-
         it 'sets the last request made at time' do
           expect(c.send(:last_api_request_at).last).to be_nil
           c.accounts.show

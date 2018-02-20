@@ -1,5 +1,12 @@
 # Change Log
 
+## 2.0.0
+#### 2018-02-15
+* Fixed issues when trying to reuse a Client object to make HTTP requests to Oanda.
+* Moved instance variables last_action, last_arguments, instrument and account_id from the Client class to the Api class. They should not be part of a Client object.
+* Removed last_transaction_id instance variable.
+* RubyVM::Logger changed to ::Logger.
+
 ## 1.5.0
 #### 2017-07-07
 * Updated the orders method to allow query options to be passed along.

@@ -24,12 +24,6 @@ describe OandaApiV20::Api do
       api = OandaApiV20::Api.new(account_id: account_id)
       expect(api.account_id).to eq(account_id)
     end
-
-    it 'sets the last_transaction_id attribute when supplied' do
-      last_transaction_id = '1'
-      api = OandaApiV20::Api.new(last_transaction_id: last_transaction_id)
-      expect(api.last_transaction_id).to eq(last_transaction_id)
-    end
   end
 
   describe '#public_methods' do
@@ -85,10 +79,9 @@ describe OandaApiV20::Api do
         expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/instruments').with(query: options)).to have_been_made.once
       end
 
-      it 'retrieving all changes' do
-        api.last_transaction_id = '1'
+      it 'retrieving no changes' do
         api.changes
-        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: { 'sinceTransactionID' => '1' })).to have_been_made.once
+        expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: { 'sinceTransactionID' => nil })).to have_been_made.once
       end
 
       it 'retrieving all changes since a transaction id' do
