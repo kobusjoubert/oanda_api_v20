@@ -8,7 +8,7 @@ module OandaApiV20
     include Transactions
     include Pricing
 
-    attr_accessor :base_uri, :headers, :account_id, :instrument, :client, :last_action, :last_arguments #, :last_api_request_at
+    attr_accessor :base_uri, :headers, :account_id, :instrument, :client, :last_action, :last_arguments
 
     def initialize(options = {})
       options.each do |key, value|
@@ -39,8 +39,8 @@ module OandaApiV20
 
         if respond_to?(last_action)
           api_result = {}
-          # set_last_api_request_at
-          # govern_api_request_rate
+          client.update_last_api_request_at
+          client.govern_api_request_rate
 
           begin
             response = Http::Exceptions.wrap_and_check do
@@ -62,11 +62,7 @@ module OandaApiV20
 
     private
 
-    attr_accessor :http_verb #, :last_api_request_at
-
-    # def set_last_api_request_at
-    #   last_api_request_at.push(Time.now.utc).shift
-    # end
+    attr_accessor :http_verb
 
     def set_last_action_and_arguments(action, *args)
       self.last_action    = action.to_sym

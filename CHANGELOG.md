@@ -6,6 +6,8 @@
 * Moved instance variables last_action, last_arguments, instrument and account_id from the Client class to the Api class. They should not be part of a Client object.
 * Removed last_transaction_id instance variable.
 * RubyVM::Logger changed to ::Logger.
+* Added a connection_pool_size option to allow persistent HTTP connection control on the Client object.
+* Added multithreading support for HTTP request governing. HTTP requests will be correctly allocated across multiple client threads.
 
 ## 1.5.0
 #### 2017-07-07

@@ -17,8 +17,10 @@ module OandaApiV20
         self.send("#{key}=", value) if self.respond_to?("#{key}=")
       end
 
+      @mutex               = Mutex.new
       @debug               = options[:debug] || false
-      # @last_api_request_at = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
+      @pool_size           = options[:connection_pool_size] || 2
+      @last_api_request_at = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
       @base_uri            = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
 
       @headers                             = {}
@@ -35,7 +37,7 @@ module OandaApiV20
         keep_alive:   30,
         idle_timeout: 10,
         warn_timeout: 2,
-        pool_size:    2
+        pool_size:    @pool_size
       }
 
       persistent_connection_adapter_options.merge!(logger: ::Logger.new(STDOUT)) if @debug
@@ -46,7 +48,7 @@ module OandaApiV20
       case name
       when *Api.api_methods
         api_attributes = {
-          client:         self, # TODO: Do we need to return a duplicate?
+          client:         self, # TODO: Do we need to return a duplicate or will self do?
           base_uri:       base_uri,
           headers:        headers,
           last_action:    name,
@@ -64,18 +66,20 @@ module OandaApiV20
       end
     end
 
-    # private
-    #
-    # attr_accessor :last_api_request_at
-    #
-    # def govern_api_request_rate
-    #   return unless last_api_request_at[0]
-    #   halt = 1 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
-    #   sleep halt if halt > 0
-    # end
-    #
-    # def set_last_api_request_at
-    #   last_api_request_at.push(Time.now.utc).shift
-    # end
+    def govern_api_request_rate
+      return unless last_api_request_at[0]
+      halt = 1 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
+      sleep halt if halt > 0
+    end
+
+    def update_last_api_request_at
+      @mutex.synchronize do
+        last_api_request_at.push(Time.now.utc).shift
+      end
+    end
+
+    private
+
+    attr_accessor :last_api_request_at
   end
 end

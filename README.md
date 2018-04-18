@@ -37,6 +37,10 @@ If you need your requests to go through a proxy:
 
     client = OandaApiV20.new(access_token: 'my_access_token', proxy_url: 'https://user:pass@proxy.com:80')
 
+You can adjust the persistend connection pool size, the default is 2:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', connection_pool_size: 10)
+
 ## Examples
 
 ### Accounts
