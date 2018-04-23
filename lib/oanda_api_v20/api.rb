@@ -8,12 +8,17 @@ module OandaApiV20
     include Transactions
     include Pricing
 
-    attr_accessor :base_uri, :headers, :account_id, :instrument, :client, :last_action, :last_arguments
+    attr_accessor :client, :base_uri, :headers, :account_id, :last_action, :last_arguments
+    attr_writer   :instrument
 
     def initialize(options = {})
       options.each do |key, value|
         self.send("#{key}=", value) if self.respond_to?("#{key}=")
       end
+
+      raise OandaApiV20::ApiError, 'No client object was supplid.' unless client
+      @base_uri ||= client.base_uri
+      @headers  ||= client.headers
     end
 
     class << self
@@ -26,8 +31,12 @@ module OandaApiV20
       original_method = instance_method(method_name)
 
       define_method(method_name) do |*args, &block|
+        # Add the block below before each of the api_methods to set the last_action and last_arguments.
+        # Return the OandaApiV20::Api object to allow for method chaining when any of the api_methods have been called.
+        # Only make an HTTP request to Oanda API When an action method like show, update, cancel, close or create was called.
         set_last_action_and_arguments(method_name, *args)
         return self unless http_verb
+
         original_method.bind(self).call(*args, &block)
       end
     end
@@ -57,6 +66,8 @@ module OandaApiV20
 
         self.http_verb = nil
         api_result
+      else
+        super
       end
     end
 

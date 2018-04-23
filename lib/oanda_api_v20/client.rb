@@ -10,18 +10,18 @@ module OandaApiV20
     }
 
     attr_accessor :access_token, :proxy_url
-    attr_reader   :base_uri, :headers
+    attr_reader   :base_uri, :headers, :connection_pool_size, :debug
 
     def initialize(options = {})
       options.each do |key, value|
         self.send("#{key}=", value) if self.respond_to?("#{key}=")
       end
 
-      @mutex               = Mutex.new
-      @debug               = options[:debug] || false
-      @pool_size           = options[:connection_pool_size] || 2
-      @last_api_request_at = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
-      @base_uri            = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
+      @mutex                = Mutex.new
+      @debug                = options[:debug] || false
+      @connection_pool_size = options[:connection_pool_size] || 2
+      @last_api_request_at  = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
+      @base_uri             = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
 
       @headers                             = {}
       @headers['Authorization']            = "Bearer #{access_token}"
@@ -37,10 +37,10 @@ module OandaApiV20
         keep_alive:   30,
         idle_timeout: 10,
         warn_timeout: 2,
-        pool_size:    @pool_size
+        pool_size:    connection_pool_size
       }
 
-      persistent_connection_adapter_options.merge!(logger: ::Logger.new(STDOUT)) if @debug
+      persistent_connection_adapter_options.merge!(logger: ::Logger.new(STDOUT)) if debug
       Client.persistent_connection_adapter(persistent_connection_adapter_options)
     end
 
@@ -49,8 +49,8 @@ module OandaApiV20
       when *Api.api_methods
         api_attributes = {
           client:         self, # TODO: Do we need to return a duplicate or will self do?
-          base_uri:       base_uri,
-          headers:        headers,
+          # base_uri:       base_uri,
+          # headers:        headers,
           last_action:    name,
           last_arguments: args
         }
