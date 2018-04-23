@@ -1,7 +1,3 @@
-require 'byebug'
-
-
-
 require 'httparty'
 require 'persistent_httparty'
 require 'http/exceptions'

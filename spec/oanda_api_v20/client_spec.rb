@@ -56,7 +56,7 @@ describe OandaApiV20::Client do
   describe '#method_missing' do
     let!(:client) { OandaApiV20::Client.new(access_token: 'my_access_token') }
 
-    it 'returns an OandaApiV20::Api instance' do
+    it 'returns an OandaApiV20::Api instance when an API method has been called' do
       expect(client.accounts).to be_an_instance_of(OandaApiV20::Api)
     end
 
@@ -70,11 +70,11 @@ describe OandaApiV20::Client do
     end
 
     it 'raises a NoMethodError exception when a method other than an OandaApiV20::Api method has been called' do
-      expect{ client.accounts.show_me_the_money }.to raise_error(NoMethodError)
+      expect{ client.this_method_definitely_does_not_exist }.to raise_error(NoMethodError)
     end
 
-    it 'raises a NoMethodError exception when a method other than an action method has been called' do
-      expect{ client.this_method_definitely_does_not_exist }.to raise_error(NoMethodError)
+    it 'raises a NoMethodError exception when a method other than an OandaApiV20::Api action method has been called' do
+      expect{ client.accounts.show_me_the_money }.to raise_error(NoMethodError)
     end
 
     context 'network' do

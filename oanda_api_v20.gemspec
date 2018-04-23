@@ -24,7 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'webmock', '~> 2.1'
   s.add_development_dependency 'timecop', '~> 0.8'
   s.add_development_dependency 'rake',    '~> 10.5'
-  s.add_development_dependency 'byebug',  '~> 10.0'
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})

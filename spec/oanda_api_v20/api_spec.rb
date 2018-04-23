@@ -101,7 +101,7 @@ describe OandaApiV20::Api do
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: { 'sinceTransactionID' => '' })).to have_been_made.once
         end
 
-        it 'retrieving all changes since a transaction id' do
+        it 'retrieving all changes since a transaction ID' do
           options = { 'sinceTransactionID' => '1' }
           api.changes(options).show
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/changes').with(query: options)).to have_been_made.once
@@ -305,7 +305,7 @@ describe OandaApiV20::Api do
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/transactions').with(query: options)).to have_been_made.once
         end
 
-        it 'retrieving all transactions in an id range' do
+        it 'retrieving all transactions in an ID range' do
           options = {
             'from' => '6409',
             'to' => '6412'
@@ -314,7 +314,7 @@ describe OandaApiV20::Api do
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/transactions/idrange').with(query: options)).to have_been_made.once
         end
 
-        it 'retrieving all transactions since an id' do
+        it 'retrieving all transactions since an ID' do
           options = {
             'id' => '6411'
           }
@@ -425,7 +425,8 @@ describe OandaApiV20::Api do
       :trade, :trades, :open_trades,
       :position, :positions, :open_positions,
       :transaction, :transactions, :transactions_id_range, :transactions_since_id,
-      :pricing
+      :pricing,
+      :candles
     ] }
 
     it 'responds to all public methods' do
