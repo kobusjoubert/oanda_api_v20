@@ -7,6 +7,7 @@
 * Removed last_transaction_id instance variable.
 * RubyVM::Logger changed to ::Logger.
 * Added a connection_pool_size option to allow persistent HTTP connection control on the Client object.
+* Added a max_requests_per_second option to allow customized control on the client max requests per second allowed to Oanda API.
 * Added multithreading support for HTTP request governing. HTTP requests will be correctly allocated across multiple client threads.
 * Raises an OandaApiV20::ApiError exception when no client object was supplied when instantiating an OandaApiV20::Api instance.
 

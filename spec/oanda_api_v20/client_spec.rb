@@ -17,6 +17,16 @@ describe OandaApiV20::Client do
       expect(client.connection_pool_size).to eq(2)
     end
 
+    it 'sets the max_requests_per_second attribute when supplied' do
+      client = OandaApiV20::Client.new(max_requests_per_second: 10)
+      expect(client.max_requests_per_second).to eq(10)
+    end
+
+    it 'sets the max_requests_per_second attribute to the default value of 100 when not supplied' do
+      client = OandaApiV20::Client.new
+      expect(client.max_requests_per_second).to eq(100)
+    end
+
     it 'sets the proxy_url attribute when supplied' do
       client = OandaApiV20::Client.new(proxy_url: 'https://user:pass@proxy.com:80')
       expect(client.proxy_url).to eq('https://user:pass@proxy.com:80')
@@ -129,30 +139,30 @@ describe OandaApiV20::Client do
         Timecop.return
       end
 
-      it 'is not allowed to make 30 requests or more per second' do
+      it 'is not allowed to make 100 requests or more per second' do
         expect(client).to receive(:sleep).at_least(:twice)
-        30.times { client.accounts.show }
+        100.times { client.accounts.show }
         Timecop.freeze('2016-08-01 06:00:01')
-        30.times { client.accounts.show }
+        100.times { client.accounts.show }
       end
 
-      it 'is allowed to make less than 30 requests per second' do
+      it 'is allowed to make less than 100 requests per second' do
         expect(client).to_not receive(:sleep)
-        29.times { client.accounts.show }
+        99.times { client.accounts.show }
         Timecop.freeze('2016-08-01 06:00:01')
-        29.times { client.accounts.show }
+        99.times { client.accounts.show }
         Timecop.freeze('2016-08-01 06:00:02')
-        29.times { client.accounts.show }
+        99.times { client.accounts.show }
       end
 
-      it 'halts all API requests for the remainder of the second when 30 requests have been made in one second' do
+      it 'halts all API requests for the remainder of the second when 100 requests have been made in one second' do
         expect(client).to receive(:sleep).with(0.7)
         Timecop.freeze('2016-08-01 06:00:00.0')
-        10.times { client.accounts.show }
+        30.times { client.accounts.show }
         Timecop.freeze('2016-08-01 06:00:00.1')
-        10.times { client.accounts.show }
+        30.times { client.accounts.show }
         Timecop.freeze('2016-08-01 06:00:00.3')
-        10.times { client.accounts.show }
+        40.times { client.accounts.show }
       end
     end
 

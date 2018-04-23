@@ -41,6 +41,10 @@ You can adjust the persistend connection pool size, the default is 2:
 
     client = OandaApiV20.new(access_token: 'my_access_token', connection_pool_size: 10)
 
+You can adjust the number of requests per second allowed to Oanda API, the default is 100:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', max_requests_per_second: 10)
+
 ## Examples
 
 ### Accounts

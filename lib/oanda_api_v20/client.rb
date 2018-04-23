@@ -2,26 +2,25 @@ module OandaApiV20
   class Client
     include HTTParty
 
-    MAX_REQUESTS_PER_SECOND_ALLOWED = 30
-
     BASE_URI = {
       live:     'https://api-fxtrade.oanda.com/v3',
       practice: 'https://api-fxpractice.oanda.com/v3'
     }
 
-    attr_accessor :access_token, :proxy_url
-    attr_reader   :base_uri, :headers, :connection_pool_size, :debug
+    attr_accessor :access_token, :proxy_url, :max_requests_per_second, :connection_pool_size, :debug
+    attr_reader   :base_uri, :headers
 
     def initialize(options = {})
       options.each do |key, value|
         self.send("#{key}=", value) if self.respond_to?("#{key}=")
       end
 
-      @mutex                = Mutex.new
-      @debug                = options[:debug] || false
-      @connection_pool_size = options[:connection_pool_size] || 2
-      @last_api_request_at  = Array.new(MAX_REQUESTS_PER_SECOND_ALLOWED)
-      @base_uri             = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
+      @mutex                   = Mutex.new
+      @debug                   ||= false
+      @connection_pool_size    ||= 2
+      @max_requests_per_second ||= 100
+      @last_api_request_at     = Array.new(max_requests_per_second)
+      @base_uri                = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
 
       @headers                             = {}
       @headers['Authorization']            = "Bearer #{access_token}"
@@ -64,7 +63,7 @@ module OandaApiV20
 
     def govern_api_request_rate
       return unless last_api_request_at[0]
-      halt = 1 - (last_api_request_at[MAX_REQUESTS_PER_SECOND_ALLOWED - 1] - last_api_request_at[0])
+      halt = 1 - (last_api_request_at[max_requests_per_second - 1] - last_api_request_at[0])
       sleep halt if halt > 0
     end
 
