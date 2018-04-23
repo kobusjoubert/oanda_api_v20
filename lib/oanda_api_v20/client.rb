@@ -48,9 +48,7 @@ module OandaApiV20
       case name
       when *Api.api_methods
         api_attributes = {
-          client:         self, # TODO: Do we need to return a duplicate or will self do?
-          # base_uri:       base_uri,
-          # headers:        headers,
+          client:         self,
           last_action:    name,
           last_arguments: args
         }
@@ -58,9 +56,7 @@ module OandaApiV20
         api_attributes.merge!(account_id: args.first) if name == :account
         api_attributes.merge!(instrument: args.first) if name == :instrument
 
-        api = Api.new(api_attributes)
-        # api.dup # TODO: Do we need to return a duplicate?
-        api
+        Api.new(api_attributes)
       else
         super
       end
