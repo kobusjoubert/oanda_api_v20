@@ -192,11 +192,11 @@ id = client.account('account_id').open_trades.show['trades'][0]['id']
 options = {
   'takeProfit' => {
     'timeInForce' => 'GTC',
-    'price' => '0.5'
+    'price' => '2.5'
   },
   'stopLoss' => {
     'timeInForce' => 'GTC',
-    'price' => '2.5'
+    'price' => '0.5'
   }
 }
 
