@@ -1,7 +1,7 @@
 # @see http://developer.oanda.com/rest-live-v20/instrument-ep/
 module OandaApiV20
   module Instruments
-    attr_accessor :instrument
+    attr_reader :instrument
 
     # GET /v3/instruments/:instrument/candles
     def candles(options = {})

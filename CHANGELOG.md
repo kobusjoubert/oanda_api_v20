@@ -1,5 +1,16 @@
 # Change Log
 
+## 2.0.0
+#### 2018-04-24
+* Fixed issues when trying to reuse a Client object to make HTTP requests to Oanda.
+* Moved instance variables last_action, last_arguments, instrument and account_id from the Client class to the Api class. They should not be part of a Client object.
+* Removed last_transaction_id instance variable.
+* RubyVM::Logger changed to ::Logger.
+* Added a connection_pool_size option to allow persistent HTTP connection control on the Client object.
+* Added a max_requests_per_second option to allow customized control on the Client max requests per second allowed to Oanda API.
+* Added multithreading support for HTTP request governing. HTTP requests will be correctly allocated across multiple client threads.
+* Raises an OandaApiV20::ApiError exception when no client object was supplied when instantiating an OandaApiV20::Api instance.
+
 ## 1.5.0
 #### 2017-07-07
 * Updated the orders method to allow query options to be passed along.

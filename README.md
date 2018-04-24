@@ -37,6 +37,14 @@ If you need your requests to go through a proxy:
 
     client = OandaApiV20.new(access_token: 'my_access_token', proxy_url: 'https://user:pass@proxy.com:80')
 
+You can adjust the persistend connection pool size, the default is 2:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', connection_pool_size: 10)
+
+You can adjust the number of requests per second allowed to Oanda API, the default is 100:
+
+    client = OandaApiV20.new(access_token: 'my_access_token', max_requests_per_second: 10)
+
 ## Examples
 
 ### Accounts
@@ -61,10 +69,6 @@ client.account('account_id').instruments.show
 
 ```ruby
 client.account('account_id').instruments('EUR_USD,EUR_CAD').show
-```
-
-```ruby
-client.account('account_id').changes.show
 ```
 
 ```ruby
@@ -132,10 +136,12 @@ id = client.account('account_id').orders.show['orders'][0]['id']
 
 options = {
   'order' => {
+    'instrument' => 'EUR_CAD',
+    'price' => '1.6000',
     'timeInForce' => 'GTC',
-    'price' => '1.7000',
-    'type' => 'TAKE_PROFIT',
-    'tradeID' => '1'
+    'type' => 'MARKET_IF_TOUCHED',
+    'units' => '200',
+    'positionFill' => 'DEFAULT'
   }
 }
 
@@ -186,11 +192,11 @@ id = client.account('account_id').open_trades.show['trades'][0]['id']
 options = {
   'takeProfit' => {
     'timeInForce' => 'GTC',
-    'price' => '0.5'
+    'price' => '2.5'
   },
   'stopLoss' => {
     'timeInForce' => 'GTC',
-    'price' => '2.5'
+    'price' => '0.5'
   }
 }
 

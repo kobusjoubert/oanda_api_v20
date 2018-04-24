@@ -25,7 +25,7 @@ module OandaApiV20
 
     # GET /v3/accounts/:account_id/changes
     def changes(options = {})
-      options = { 'sinceTransactionID' => last_transaction_id } unless options['sinceTransactionID']
+      options = { 'sinceTransactionID' => nil } unless options['sinceTransactionID']
       Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/changes", headers: headers, query: options)
     end
 
