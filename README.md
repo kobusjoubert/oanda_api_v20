@@ -136,10 +136,12 @@ id = client.account('account_id').orders.show['orders'][0]['id']
 
 options = {
   'order' => {
+    'instrument' => 'EUR_CAD',
+    'price' => '1.6000,
     'timeInForce' => 'GTC',
-    'price' => '1.7000',
-    'type' => 'TAKE_PROFIT',
-    'tradeID' => '1'
+    'type' => 'MARKET_IF_TOUCHED',
+    'units' => '200',
+    'positionFill' => 'DEFAULT'
   }
 }
 
