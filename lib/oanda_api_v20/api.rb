@@ -56,7 +56,7 @@ module OandaApiV20
               last_arguments.nil? || last_arguments.empty? ? send(last_action, &block) : send(last_action, *last_arguments, &block)
             end
           rescue Http::Exceptions::HttpException => e
-            raise OandaApiV20::RequestError, e.message
+            raise OandaApiV20::RequestError.new(e.message, response: e.response, original_exception: e.original_exception)
           end
 
           if response.body && !response.body.empty?

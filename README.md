@@ -309,6 +309,16 @@ client.account('account_id').pricing(options).show
 
 A `OandaApiV20::RequestError` will be raised when a request to the Oanda API failed for any reason.
 
+You can access the original exception:
+
+```ruby
+begin
+  do_something
+rescue OandaApiV20::RequestError => e
+  e.original_exception
+end
+```
+
 ## Contributing
 
 1. Fork it
