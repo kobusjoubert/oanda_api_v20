@@ -33,7 +33,7 @@ module OandaApiV20
       define_method(method_name) do |*args, &block|
         # Add the block below before each of the api_methods to set the last_action and last_arguments.
         # Return the OandaApiV20::Api object to allow for method chaining when any of the api_methods have been called.
-        # Only make an HTTP request to Oanda API When an action method like show, update, cancel, close or create was called.
+        # Only make an HTTP request to Oanda API when an action method like show, update, cancel, close or create was called.
         set_last_action_and_arguments(method_name, *args)
         return self unless http_verb
 
