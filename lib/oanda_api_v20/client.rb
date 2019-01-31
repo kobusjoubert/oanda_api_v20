@@ -3,9 +3,15 @@ module OandaApiV20
     include HTTParty
 
     BASE_URI = {
-      live:     'https://api-fxtrade.oanda.com/v3',
-      practice: 'https://api-fxpractice.oanda.com/v3'
-    }
+      live: {
+        api:    'https://api-fxtrade.oanda.com/v3',
+        stream: 'https://stream-fxtrade.oanda.com/v3'
+      },
+      practice: {
+        api:    'https://api-fxpractice.oanda.com/v3',
+        stream: 'https://stream-fxpractice.oanda.com/v3'
+      }
+    }.freeze
 
     attr_accessor :access_token, :proxy_url, :max_requests_per_second, :connection_pool_size, :debug
     attr_reader   :base_uri, :headers
@@ -20,7 +26,8 @@ module OandaApiV20
       @connection_pool_size    ||= 2
       @max_requests_per_second ||= 100
       @last_api_request_at     = Array.new(max_requests_per_second)
-      @base_uri                = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
+      uris                     = options[:practice] == true ? BASE_URI[:practice] : BASE_URI[:live]
+      @base_uri                = options[:stream] == true ? uris[:stream] : uris[:api]
 
       @headers                             = {}
       @headers['Authorization']            = "Bearer #{access_token}"
@@ -39,7 +46,7 @@ module OandaApiV20
         pool_size:    connection_pool_size
       }
 
-      persistent_connection_adapter_options.merge!(logger: ::Logger.new(STDOUT)) if debug
+      persistent_connection_adapter_options.merge!(logger: ::Logger.new(STDOUT), debug_output: ::Logger.new(STDOUT)) if debug
       Client.persistent_connection_adapter(persistent_connection_adapter_options)
     end
 
