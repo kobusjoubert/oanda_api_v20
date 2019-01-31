@@ -62,7 +62,9 @@ describe OandaApiV20::Api do
   describe '#method_missing' do
     describe 'constructs the correct API URL under' do
       let!(:client) { OandaApiV20::Client.new(access_token: 'my_access_token', base_uri: 'https://api-fxtrade.oanda.com/v3', headers: {}) }
+      let!(:stream_client) { OandaApiV20::Client.new(access_token: 'my_access_token', base_uri: 'https://api-fxtrade.oanda.com/v3', headers: {}, stream: true) }
       let!(:api)    { OandaApiV20::Api.new(client: client, account_id: '100-100-100') }
+      let!(:stream_api) { OandaApiV20::Api.new(client: stream_client, account_id: '100-100-100') }
 
       before(:each) do
         stub_request(:get, /https:\/\/api-fxtrade\.oanda\.com\/v3.*/)
@@ -331,6 +333,33 @@ describe OandaApiV20::Api do
           api.pricing(options).show
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/pricing').with(query: options)).to have_been_made.once
         end
+
+        it 'retrieving all pricing stream' do
+          options = {
+            'instruments' => 'EUR_USD,USD_CAD'
+          }
+
+          body = <<~EOF
+{"type":"PRICE","time":"2019-01-31T18:16:38.818627106Z","bids":[{"price":"0.72711","liquidity":10000000}],"asks":[{"price":"0.72725","liquidity":10000000}],"closeoutBid":"0.72696","closeoutAsk":"0.72740","status":"tradeable","tradeable":true,"instrument":"USD_CAD"}\n{"type":"PRICE","time":"2019-01-31T18:16:48.270050596Z","bids":[{"price":"0.95533","liquidity":10000000}],"asks":[{"price":"0.95554","liquidity":10000000}],"closeoutBid":"0.95533","closeoutAsk":"0.95554","status":"tradeable","tradeable":true,"instrument":"EUR_USD"}\n\r\n
+EOF
+
+          headers = {
+            'Transfer-Encoding' => 'chunked',
+            'Content-Type' => 'application/octet-stream'
+          }
+
+          stub_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/pricing/stream?instruments=EUR_USD,USD_CAD').
+            to_return(status: 200, body: body, headers: headers)
+
+          messages = []
+          stream_api.pricing_stream(options).show do |message|
+            messages << message
+          end
+
+          expect(a_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/pricing/stream').with(query: options)).to have_been_made.once
+
+          expect(messages.count).to eq(2)
+        end
       end
     end
 
@@ -426,6 +455,7 @@ describe OandaApiV20::Api do
       :position, :positions, :open_positions,
       :transaction, :transactions, :transactions_id_range, :transactions_since_id,
       :pricing,
+      :pricing_stream,
       :candles
     ] }
 
