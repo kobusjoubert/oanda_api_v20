@@ -1,5 +1,6 @@
 module OandaApiV20
   class ApiError < RuntimeError; end
+  class ParseError < RuntimeError; end
 
   class RequestError < RuntimeError
     attr_reader :response, :original_exception

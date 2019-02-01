@@ -323,9 +323,11 @@ end
 
 ## Exceptions
 
+A `OandaApiV20::ParseError` will be raised when a response from the Oanda API is malformed.
+
 A `OandaApiV20::RequestError` will be raised when a request to the Oanda API failed for any reason.
 
-You can access the original exception:
+You can access the original exception in a `OandaApiV20::RequestError`:
 
 ```ruby
 begin

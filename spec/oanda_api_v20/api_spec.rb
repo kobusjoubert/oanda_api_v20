@@ -61,10 +61,10 @@ describe OandaApiV20::Api do
 
   describe '#method_missing' do
     describe 'constructs the correct API URL under' do
-      let!(:client) { OandaApiV20::Client.new(access_token: 'my_access_token', base_uri: 'https://api-fxtrade.oanda.com/v3', headers: {}) }
+      let!(:client)        { OandaApiV20::Client.new(access_token: 'my_access_token', base_uri: 'https://api-fxtrade.oanda.com/v3', headers: {}) }
       let!(:stream_client) { OandaApiV20::Client.new(access_token: 'my_access_token', base_uri: 'https://api-fxtrade.oanda.com/v3', headers: {}, stream: true) }
-      let!(:api)    { OandaApiV20::Api.new(client: client, account_id: '100-100-100') }
-      let!(:stream_api) { OandaApiV20::Api.new(client: stream_client, account_id: '100-100-100') }
+      let!(:api)           { OandaApiV20::Api.new(client: client, account_id: '100-100-100') }
+      let!(:stream_api)    { OandaApiV20::Api.new(client: stream_client, account_id: '100-100-100') }
 
       before(:each) do
         stub_request(:get, /https:\/\/api-fxtrade\.oanda\.com\/v3.*/)
@@ -348,16 +348,15 @@ EOF
             'Content-Type' => 'application/octet-stream'
           }
 
-          stub_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/pricing/stream?instruments=EUR_USD,USD_CAD').
-            to_return(status: 200, body: body, headers: headers)
+          stub_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/pricing/stream?instruments=EUR_USD,USD_CAD').to_return(status: 200, body: body, headers: headers)
 
           messages = []
+
           stream_api.pricing_stream(options).show do |message|
             messages << message
           end
 
           expect(a_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/pricing/stream').with(query: options)).to have_been_made.once
-
           expect(messages.count).to eq(2)
         end
       end

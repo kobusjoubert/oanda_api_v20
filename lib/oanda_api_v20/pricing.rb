@@ -1,8 +1,6 @@
 # @see http://developer.oanda.com/rest-live-v20/pricing-ep/
 module OandaApiV20
   module Pricing
-    ParsingException = Class.new(StandardError)
-
     # GET /v3/accounts/:account_id/pricing
     def pricing(options)
       Client.send(http_verb, "#{base_uri}/accounts/#{account_id}/pricing", headers: headers, query: options)
@@ -24,8 +22,8 @@ module OandaApiV20
             next if cleaned_message.empty?
             yield JSON.parse(cleaned_message)
           end
-        rescue => e
-          raise ParsingException.new("ERROR: #{e.class}: #{e.message} in '#{fragment}'")
+        rescue JSON::ParseError => e
+          raise OandaApiV20::ParseError, "#{e.message} in '#{fragment}'"
         ensure
           buffer.flush
         end
