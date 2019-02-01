@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.1.0
+#### 2019-02-01
+* New pricing_stream endpoint. Big thanks to @joseluis-fw.
+* Raises an OandaApiV20::ParseError exception when a malformed response returned from Oanda API.
+* The OandaApiV20::RequestError exception object now has an original_exception attribute which contains the original exception object raised.
+
 ## 2.0.0
 #### 2018-04-24
 * Fixed issues when trying to reuse a Client object to make HTTP requests to Oanda.
