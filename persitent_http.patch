@@ -1,0 +1,41 @@
+diff --git a/lib/oanda_api_v20/api.rb b/lib/oanda_api_v20/api.rb
+index e68846c..683729c 100644
+--- a/lib/oanda_api_v20/api.rb
++++ b/lib/oanda_api_v20/api.rb
+@@ -11,6 +11,11 @@ module OandaApiV20
+     attr_accessor :client, :base_uri, :headers, :account_id, :last_action, :last_arguments
+     attr_writer   :instrument
+ 
++    RequestErrors = [
++      Http::Exceptions::HttpException,
++      PersistentHTTP::Error
++    ]
++
+     def initialize(options = {})
+       options.each do |key, value|
+         self.send("#{key}=", value) if self.respond_to?("#{key}=")
+@@ -55,7 +60,7 @@ module OandaApiV20
+             response = Http::Exceptions.wrap_and_check do
+               last_arguments.nil? || last_arguments.empty? ? send(last_action, &block) : send(last_action, *last_arguments, &block)
+             end
+-          rescue Http::Exceptions::HttpException => e
++          rescue *RequestErrors => e
+             raise OandaApiV20::RequestError, e.message
+           end
+ 
+diff --git a/spec/oanda_api_v20/client_spec.rb b/spec/oanda_api_v20/client_spec.rb
+index ae2ad7f..9be2cf9 100644
+--- a/spec/oanda_api_v20/client_spec.rb
++++ b/spec/oanda_api_v20/client_spec.rb
+@@ -93,6 +93,11 @@ describe OandaApiV20::Client do
+         expect{ client.account('100-100-109').show }.to raise_error(OandaApiV20::RequestError)
+       end
+ 
++      it 'raises an OandaApiV20::RequestError exception when receiving a persistent http error from the client request' do
++        allow(OandaApiV20::Client).to receive(:get).and_raise(PersistentHTTP::Error)
++        expect{ client.account('100-100-109').show }.to raise_error(OandaApiV20::RequestError)
++      end
++
+       describe 'headers' do
+         it 'sets authentication header' do
+           client.accounts.show

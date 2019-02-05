@@ -22,7 +22,7 @@ module OandaApiV20
             next if cleaned_message.empty?
             yield JSON.parse(cleaned_message)
           end
-        rescue JSON::ParseError => e
+        rescue JSON::ParserError => e
           raise OandaApiV20::ParseError, "#{e.message} in '#{fragment}'"
         ensure
           buffer.reopen
