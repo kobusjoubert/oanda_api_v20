@@ -25,7 +25,7 @@ module OandaApiV20
         rescue JSON::ParseError => e
           raise OandaApiV20::ParseError, "#{e.message} in '#{fragment}'"
         ensure
-          buffer.flush
+          buffer.reopen
         end
       end
     end
