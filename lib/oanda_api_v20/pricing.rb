@@ -31,6 +31,5 @@ module OandaApiV20
     ensure
       buffer.clear
     end
-
   end
 end
