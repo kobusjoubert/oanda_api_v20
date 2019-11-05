@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.1.1
+#### 2019-10-05
+* Fix to pricing_stream method. This fixes the currency pair rate being reused over and over no matter the value read in the HTTP chunk. Big thanks to @joseluis-fw & @salrepe.
+
 ## 2.1.0
 #### 2019-02-01
 * New pricing_stream endpoint. Big thanks to @joseluis-fw.
