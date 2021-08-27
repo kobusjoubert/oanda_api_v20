@@ -323,6 +323,28 @@ describe OandaApiV20::Api do
           api.transactions_since_id(options).show
           expect(a_request(:get, 'https://api-fxtrade.oanda.com/v3/accounts/100-100-100/transactions/sinceid').with(query: options)).to have_been_made.once
         end
+
+        it 'retrieving all transactions stream' do
+          body = <<~EOF
+{"id":"6","accountID":"100-100-100","userID":12345678,"batchID":"4","requestID":"11111111111111111","time":"2021-08-20T11:56:39.037505525Z","type":"TAKE_PROFIT_ORDER","tradeID":"5","timeInForce":"GTC","triggerCondition":"DEFAULT","price":"0.71388","reason":"ON_FILL"}\n{"id":"7","accountID":"100-100-100","userID":12345678,"batchID":"4","requestID":"11111111111111112","time":"2021-08-20T11:56:39.037505525Z","type":"STOP_LOSS_ORDER","tradeID":"5","timeInForce":"GTC","triggerCondition":"DEFAULT","triggerMode":"TOP_OF_BOOK","price":"0.71258","distance":"0.00030","reason":"ON_FILL"}\n\r\n
+EOF
+
+          headers = {
+            'Transfer-Encoding' => 'chunked',
+            'Content-Type' => 'application/octet-stream'
+          }
+
+          stub_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/transactions/stream').to_return(status: 200, body: body, headers: headers)
+
+          messages = []
+
+          stream_api.transactions_stream.show do |message|
+            messages << message
+          end
+
+          expect(a_request(:get, 'https://stream-fxtrade.oanda.com/v3/accounts/100-100-100/transactions/stream')).to have_been_made.once
+          expect(messages.count).to eq(2)
+        end
       end
 
       context 'pricing for' do
@@ -453,6 +475,7 @@ EOF
       :trade, :trades, :open_trades,
       :position, :positions, :open_positions,
       :transaction, :transactions, :transactions_id_range, :transactions_since_id,
+      :transactions_stream,
       :pricing,
       :pricing_stream,
       :candles

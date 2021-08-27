@@ -297,6 +297,14 @@ options = {
 client.account('account_id').transactions_since_id(options).show
 ```
 
+```ruby
+client = OandaApiV20.new(access_token: 'my_access_token', stream: true)
+
+client.account('account_id').transactions_stream.show do |json|
+  puts json if json['type'] != 'HEARTBEAT'
+end
+```
+
 ### Pricing
 
 See the [Oanda Documentation](http://developer.oanda.com/rest-live-v20/pricing-ep/) for all available options on pricing.
