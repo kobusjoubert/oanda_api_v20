@@ -17,19 +17,5 @@ module OandaApiV20
         end
       end
     end
-
-    private
-
-    def parse(buffer, fragment, &block)
-      buffer.split("\n").each do |message|
-        cleaned_message = message.strip
-        next if cleaned_message.empty?
-        yield JSON.parse(cleaned_message)
-      end
-    rescue JSON::ParserError => e
-      raise OandaApiV20::ParseError, "#{e.message} in '#{fragment}'"
-    ensure
-      buffer.clear
-    end
   end
 end
