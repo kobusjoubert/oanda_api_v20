@@ -1,5 +1,11 @@
 # Change Log
 
+## 2.2.0
+#### 2021-08-27
+
+* New transactions_stream endpoint. Big thanks to @plabaj.
+* Upgraded development dependency version for rake to fix potential security vulnerability.
+
 ## 2.1.1
 #### 2019-10-05
 * Fix to pricing_stream method. This fixes the currency pair rate being reused over and over no matter the value read in the HTTP chunk. Big thanks to @joseluis-fw & @salrepe.
